@@ -1,0 +1,24 @@
+id: externally-connectable
+
+info:
+  name: Externally Connectable
+  description: Specify external extensions and web pages the extension can exchange information with using the "externally_connectable" field. Limit connections to trusted sources.
+  author: nullenc0de
+  severity: medium
+
+file:
+  - extensions:
+      - json
+
+    matchers:
+      - type: regex
+        regex:
+          - "\"externally_connectable\"\\s*:\\s*{"
+
+    extractors:
+      - type: regex
+        part: body
+        name: extracted_externally_connectable
+        regex:
+          - "\"externally_connectable\"\\s*:\\s*\\{[\\s\\S]*?\\}"
+

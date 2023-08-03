@@ -1,0 +1,25 @@
+id: cross-origin-fetch
+
+info:
+  name: Cross-origin Fetch()
+  description: Identify instances of fetch() and XMLHttpRequest() usage to determine potential cross-origin resource sharing (CORS) vulnerabilities.
+  author: nullenc0de
+  severity: medium
+
+file:
+  - extensions:
+      - json
+      - js
+
+    matchers:
+      - type: regex
+        regex:
+          - "fetch\\(|XMLHttpRequest\\("
+
+    extractors:
+      - type: regex
+        part: body
+        name: extracted_fetch_usage
+        regex:
+          - "((fetch|XMLHttpRequest)\\([^)]*\\))"
+

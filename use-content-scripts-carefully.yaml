@@ -1,0 +1,24 @@
+id: use-content-scripts-carefully
+
+info:
+  name: Use Content Scripts Carefully
+  description: Be cautious while using content scripts to prevent potential security vulnerabilities. Avoid using dangerous APIs and validate/sanitize all input received from content scripts.
+  author: nullenc0de
+  severity: medium
+
+file:
+  - extensions:
+      - js
+
+    matchers:
+      - type: regex
+        regex:
+          - "chrome\\.runtime\\.onMessage(?:External)?\\s*\\.addListener\\(\\s*function\\s*\\(\\s*request\\s*,\\s*sender\\s*,\\s*sendResponse\\s*\\)\\s*{\\s*[^}]*\\brequest\\b[^}]*\\bsender\\b[^}]*\\bsendResponse\\b"
+
+    extractors:
+      - type: regex
+        part: body
+        name: chrome_runtime_listeners
+        regex:
+          - "chrome\\.runtime\\.onMessage(?:External)?\\s*\\.addListener\\(\\s*function\\s*\\(\\s*request\\s*,\\s*sender\\s*,\\s*sendResponse\\s*\\)\\s*{\\s*[^}]*\\brequest\\b[^}]*\\bsender\\b[^}]*\\bsendResponse\\b"
+

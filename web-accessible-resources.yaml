@@ -1,0 +1,17 @@
+id: web-accessible-resources
+
+info:
+  name: Web-accessible Resources
+  description: Keep the list of web-accessible resources to a minimum to limit potential attack vectors.
+  author: nullenc0de
+  severity: info
+
+file:
+  - extensions:
+      - json
+
+    matchers:
+      - type: regex
+        part: body
+        regex:
+          - "\"web_accessible_resources\"\\s*:\\s*\\["

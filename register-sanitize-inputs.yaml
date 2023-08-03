@@ -1,0 +1,31 @@
+id: register-sanitize-inputs
+
+info:
+  name: Register and Sanitize Inputs
+  description: Safeguard an extension from malicious scripts by limiting listeners to only what the extension is expecting, validating the senders of incoming data, and sanitizing all inputs.
+  author: nullenc0de
+  severity: medium
+
+file:
+  - extensions:
+      - js
+
+    matchers:
+      - type: regex
+        regex:
+          - "chrome\\.runtime\\.onMessage(?:External)?\\.addListener\\(\\s*function\\s*\\(\\s*request\\s*,\\s*sender\\s*,\\s*sendResponse\\s*\\)\\s*{"
+
+    extractors:
+      - type: regex
+        part: body
+        name: extracted_listener
+        regex:
+          - "chrome\\.runtime\\.onMessage(?:External)?\\.addListener\\(\\s*function\\s*\\(\\s*request\\s*,\\s*sender\\s*,\\s*sendResponse\\s*\\)\\s*{[^}]+if\\s*\\(\\s*sender\\.id\\s*===\\s*([\"'].*?[\"'])\\s*\\)"
+
+      - type: regex
+        part: body
+        name: extracted_on_message
+        regex:
+          - "chrome\\.runtime\\.onMessage\\.addListener\\(\\s*function\\s*\\(\\s*request\\s*,\\s*sender\\s*,\\s*sendResponse\\s*\\)\\s*{[^}]+if\\s*\\(\\s*request\\.allowedAction\\s*\\)"
+
+

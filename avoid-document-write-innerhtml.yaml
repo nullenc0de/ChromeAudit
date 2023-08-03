@@ -1,0 +1,24 @@
+id: avoid-document-write-innerhtml
+
+info:
+  name: Avoid document.write() and innerHTML
+  description: Prevent the use of document.write() and innerHTML to mitigate potential script injection attacks on the extension and its dependent web pages.
+  author: nullenc0de
+  severity: medium
+
+file:
+  - extensions:
+      - js
+
+    matchers:
+      - type: regex
+        regex:
+          - "(document\\.write|innerHTML)"
+
+    extractors:
+      - type: regex
+        part: body
+        name: extracted_script
+        regex:
+          - "(document\\.write|innerHTML)"
+

@@ -1,0 +1,25 @@
+id: never-use-http
+
+info:
+  name: Never Use HTTP
+  description: Ensure all requests and data exchanges avoid HTTP connections, preferring HTTPS to enhance security and prevent potential man-in-the-middle attacks.
+  author: nullenc0de
+  severity: low
+
+file:
+  - extensions:
+      - json
+      - js
+
+    matchers:
+      - type: regex
+        regex:
+          - "http://"
+
+    extractors:
+      - type: regex
+        part: body
+        name: extracted_http_url
+        regex:
+          - "http://[^\\s'\"]+"
+
