@@ -1,0 +1,34 @@
+id: wildcards-in-manifest
+
+info:
+  name: Wildcards in Manifest
+  description: Check for wildcards in the manifest file, which could lead to overexposure of permissions and security risks.
+  author: nullenc0de
+  severity: low
+
+file:
+  - extensions:
+      - json
+
+    matchers:
+      - type: regex
+        regex:
+          - "\\*\\/\\/\\*"
+          - "\\*:\\/\\/*"
+          - "\\\"\\*\\/"
+          - "\\/\\*\\\""
+          - "\\*:\\/\\/\\*\\/*"
+          - "\\*\\/\\*\\/*"
+
+    extractors:
+      - type: regex
+        part: body
+        name: wildcard_matches
+        regex:
+          - "\\*\\/\\/\\*"
+          - "\\*:\\/\\/*"
+          - "\\\"\\*\\/"
+          - "\\/\\*\\\""
+          - "\\*:\\/\\/\\*\\/*"
+          - "\\*\\/\\*\\/*"
+
