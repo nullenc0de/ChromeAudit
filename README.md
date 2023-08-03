@@ -1,7 +1,7 @@
 # ChromeAudit
 Nuclei plugins to audit Chrome extensions
 
-**Download the Chrome Extension as a ZIP file**. In case you can only find a CRX file, rename it with the extension .zip.
+1. **Download the Chrome Extension as a ZIP file**. In case you can only find a CRX file, rename it with the extension .zip.
 
 2. **Unzip the downloaded file** to access its contents.
 
