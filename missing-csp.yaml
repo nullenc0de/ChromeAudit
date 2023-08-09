@@ -2,7 +2,7 @@ id: missing-content-security-policy
 
 info:
   name: Include an Explicit Content Security Policy
-  description: Incorporate a content security policy in the extension's manifest to mitigate cross-site scripting (XSS) attacks.
+  description: Incorporate a strong content security policy in the extension's manifest to mitigate XSS attacks.
   author: nullenc0de
   severity: medium
 
@@ -13,11 +13,28 @@ file:
     matchers:
       - type: regex
         regex:
-          - "\"content_security_policy\"\\s*:\\s*\\{[\\s\\S]*?\\}"
+          - '"content_security_policy"'
+        negative: true
+
+      - type: regex
+        regex: 
+          - '"content_security_policy":\\s*{}'
         negative: true
 
       - type: regex
         regex:
-          - "\"content_security_policy\"\\s*:\\s*null"
+          - '"script-src\\s*:' 
         negative: true
 
+    extractors:
+      - type: regex
+        part: body
+        name: csp
+        regex:
+          - '"content_security_policy":\\s*({[^}]+})'
+  
+      - type: regex
+        part: csp
+        name: csp_directives
+        regex:
+          - '\\s*\\"([^"]+)\\"'
