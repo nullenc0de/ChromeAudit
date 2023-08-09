@@ -1,8 +1,8 @@
 id: wildcards-in-manifest
 
 info:
-  name: Wildcards in Manifest
-  description: Check for wildcards in the manifest file, which could lead to overexposure of permissions and security risks.
+  name: Validate Wildcards in Manifest 
+  description: Wildcards should be restricted only to required paths to prevent overprivilege.
   author: nullenc0de
   severity: low
 
@@ -13,22 +13,21 @@ file:
     matchers:
       - type: regex
         regex:
-          - "\\*\\/\\/\\*"
-          - "\\*:\\/\\/*"
-          - "\\\"\\*\\/"
-          - "\\/\\*\\\""
-          - "\\*:\\/\\/\\*\\/*"
-          - "\\*\\/\\*\\/*"
+          - '"matches":\\s*\\["'   
+
+      - type: regex
+        regex: 
+          - '\\*\\/everything\\/\\*'
+        negative: true
 
     extractors:
       - type: regex
         part: body
         name: wildcard_matches
         regex:
-          - "\\*\\/\\/\\*"
-          - "\\*:\\/\\/*"
-          - "\\\"\\*\\/"
-          - "\\/\\*\\\""
-          - "\\*:\\/\\/\\*\\/*"
-          - "\\*\\/\\*\\/*"
+          - '"matches":\\s*\\[(.+?)\\]'
 
+      - type: regex
+        part: wildcard_matches
+        name: match
+        regex: '\\s+"(.+?)"'
