@@ -37,7 +37,7 @@ file:
         kval:
           - "{origin} != {target_origin}"
 
-network:
+tcp:
   - inputs:
       - data: "GET / HTTP/1.1"
     host:
