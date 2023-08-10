@@ -1,25 +1,50 @@
 id: cross-origin-fetch
 
 info:
-  name: Cross-origin Fetch()
-  description: potential FP. Validate CORS is not implimented. Identify instances of fetch() and XMLHttpRequest() usage to determine potential cross-origin resource sharing (CORS) vulnerabilities.
-  author: nullenc0de
+  name: Cross-origin Fetch() 
+  description: Identify potential CORS misconfiguration by detecting cross-origin fetch() or XMLHttpRequest() calls without proper CORS headers set.
+  author: nullenc0de,geeknik
   severity: medium
 
 file:
   - extensions:
-      - json
       - js
-
+      - json
+    
     matchers:
       - type: regex
         regex:
           - "fetch\\(|XMLHttpRequest\\("
 
+      - type: regex
+        regex:
+          - "credentials:[^\\n\\r']+\\s+(omit|same-origin)"
+        negative: true
+
     extractors:
       - type: regex
-        part: body
-        name: extracted_fetch_usage
+        name: origin
         regex:
-          - "((fetch|XMLHttpRequest)\\([^)]*\\))"
+          - "fetch\\(([^,]+)"
 
+      - type: regex  
+        name: target_origin
+        regex:
+          - "\\.origin\\s*=\\s*['\"]([^'\"]+)['\"]"
+
+      - type: kval
+        name: confirm_cross_origin
+        kval:
+          - "{origin} != {target_origin}"
+
+network:
+  - inputs:
+      - data: "GET / HTTP/1.1"
+    host:
+      - "{{target_origin}}"
+    read-size: 4096
+    matchers:
+      - type: word
+        words:
+          - "Access-Control-Allow-Origin"
+        negative: true
