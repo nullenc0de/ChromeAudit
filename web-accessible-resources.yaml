@@ -1,8 +1,8 @@
 id: web-accessible-resources
 
 info:
-  name: Web-accessible Resources
-  description: Keep the list of web-accessible resources to a minimum to limit potential attack vectors.
+  name: Minimize Web Accessible Resources
+  description: The web_accessible_resources list should be limited to only necessary resources.
   author: nullenc0de
   severity: info
 
@@ -14,4 +14,27 @@ file:
       - type: regex
         part: body
         regex:
-          - "\"web_accessible_resources\"\\s*:\\s*\\["
+          - '"web_accessible_resources"'
+
+      - type: regex
+        regex:
+          - "\\.html$"
+        negative: true
+          
+      - type: regex  
+        regex:
+          - "\\.js$"
+        negative: true
+
+    extractors:
+      - type: regex
+        part: body
+        name: web_resources
+        regex:
+          - '"web_accessible_resources":\\s*\\[(.+)\\]'
+
+      - type: regex
+        part: web_resources
+        name: resource
+        regex:
+          - "'([^']+)'"
