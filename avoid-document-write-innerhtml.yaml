@@ -10,10 +10,14 @@ file:
   - extensions:
       - js
 
+    matchers-condition: and
     matchers:
       - type: regex
         regex:
-          - "(document\\.write|innerHTML)"
+          - "document\\.write"
+      - type: regex  
+        regex:
+          - "innerHTML"
 
     extractors:
       - type: regex
@@ -21,4 +25,3 @@ file:
         name: extracted_script
         regex:
           - "(document\\.write|innerHTML)"
-
