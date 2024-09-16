@@ -2,7 +2,7 @@ id: register-sanitize-inputs
 
 info:
   name: Register and Sanitize Inputs
-  description: Safeguard an extension from malicious scripts by limiting listeners to only what the extension is expecting, validating the senders of incoming data, and sanitizing all inputs.
+  description: Safeguard an extension by validating senders, sanitizing inputs, and restricting actions.
   author: nullenc0de
   severity: medium
 
@@ -13,19 +13,30 @@ file:
     matchers:
       - type: regex
         regex:
-          - "chrome\\.runtime\\.onMessage(?:External)?\\.addListener\\(\\s*function\\s*\\(\\s*request\\s*,\\s*sender\\s*,\\s*sendResponse\\s*\\)\\s*{"
+          - "chrome\\.runtime\\.onMessage(?:External)?\\.addListener"
+  
+      - type: regex 
+        regex:
+          - 'if\\(sender\\.id\\s*==='
+        negative: true
+
+      - type: regex
+        regex:
+          - 'if\\(request\\.allowedAction\\s*===' 
+        negative: true
+
+      - type: regex
+        regex:
+          - '\\.sanitise\\('
+        negative: true
+
+      - type: regex
+        regex:
+          - '\\.validate\\('
+        negative: true
 
     extractors:
       - type: regex
-        part: body
-        name: extracted_listener
+        name: allowed_actions
         regex:
-          - "chrome\\.runtime\\.onMessage(?:External)?\\.addListener\\(\\s*function\\s*\\(\\s*request\\s*,\\s*sender\\s*,\\s*sendResponse\\s*\\)\\s*{[^}]+if\\s*\\(\\s*sender\\.id\\s*===\\s*([\"'].*?[\"'])\\s*\\)"
-
-      - type: regex
-        part: body
-        name: extracted_on_message
-        regex:
-          - "chrome\\.runtime\\.onMessage\\.addListener\\(\\s*function\\s*\\(\\s*request\\s*,\\s*sender\\s*,\\s*sendResponse\\s*\\)\\s*{[^}]+if\\s*\\(\\s*request\\.allowedAction\\s*\\)"
-
-
+          - 'request\\.allowedAction\\s*===\\s*["'](.+)["']'
