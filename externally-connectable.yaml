@@ -1,8 +1,8 @@
-id: externally-connectable
+id: externally-connectable  
 
 info:
-  name: Externally Connectable
-  description: Specify external extensions and web pages the extension can exchange information with using the "externally_connectable" field. Limit connections to trusted sources.
+  name: Validate Externally Connectable
+  description: The externally_connectable field should be limited to only necessary and trusted domains.  
   author: nullenc0de
   severity: medium
 
@@ -13,12 +13,22 @@ file:
     matchers:
       - type: regex
         regex:
-          - "\"externally_connectable\"\\s*:\\s*{"
+          - "\"externally_connectable\"\\s*:\\s*\\"
+
+      - type: regex
+        regex:
+          - "https://[^\\s'\"]+\\.example\\.com"
+        negative: true
 
     extractors:
-      - type: regex
+      - type: regex 
         part: body
-        name: extracted_externally_connectable
+        name: external_domains
         regex:
-          - "\"externally_connectable\"\\s*:\\s*\\{[\\s\\S]*?\\}"
-
+          - "\"externally_connectable\"\\s*:\\s*\\[([^\\]]+)\\]"
+  
+      - type: regex
+        part: external_domains
+        name: extracted_domain
+        regex:
+          - "'(https://[^']+')"
